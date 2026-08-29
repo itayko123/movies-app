@@ -48,17 +48,40 @@ client. Verified absent from the built bundle; keep it that way.
 
 ## Two things that need configuring outside the repo
 
-### 1. Supabase Auth redirect URLs
+### 1. Supabase Auth URL configuration
 
-Google sign-in on web uses `supabase.auth.signInWithOAuth` with a `redirectTo`.
-Supabase rejects any redirect not on its allow-list, so sign-in will fail on the
-deployed domain until you add it:
+Google sign-in on web uses `supabase.auth.signInWithOAuth` with a `redirectTo`
+of `window.location.origin` (see `authRedirectUri()` in
+`src/lib/authRedirect.ts` — the web branch is already there).
 
-Supabase Dashboard → Authentication → URL Configuration → Redirect URLs:
+**Two fields must be set, and getting only one right produces a confusing bug.**
+
+Supabase Dashboard → Authentication → URL Configuration:
+
+| Field | Value |
+|---|---|
+| **Site URL** | `https://<your-vercel-domain>` |
+| **Redirect URLs** | `https://<your-vercel-domain>/**` (plus any custom domain) |
+
+**Symptom if Redirect URLs is wrong: OAuth returns to `exp://...` instead of
+the website.** This looks exactly like a client bug and is not one. When
+Supabase receives a `redirectTo` that is not on the allow-list it does not
+error — it silently discards it and falls back to **Site URL**. If Site URL is
+still an `exp://` address left over from Expo Go development, that is where
+every web sign-in lands.
+
+How to tell the two apart in one step: search the deployed JS bundle for
+`exp://`. The web build contains that string **zero** times (Metro drops the
+Expo Go branch), so if you are being sent there, the redirect came from the
+server, not the client — fix it in the dashboard.
+
+Keep the native entries in the allow-list alongside the web ones; they do not
+conflict:
 
 ```
-https://<your-vercel-domain>/**
-https://<your-custom-domain>/**
+cineswipe://auth/callback
+cineswipe://**
+exp://<lan-ip>:8090/--/**      # Expo Go only, IP changes with the network
 ```
 
 ### 2. App Check blocks Edge Functions on web — by design
