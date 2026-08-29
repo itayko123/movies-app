@@ -1,0 +1,28 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    // Platform-split modules (foo.native.ts / foo.web.ts): TypeScript
+    // resolves `@/lib/foo` to the .native implementation (the richest
+    // surface), while Metro picks the right file per platform at bundle time.
+    "moduleSuffixes": [".native", ""]
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts",
+    "nativewind-env.d.ts"
+  ],
+  // `screenshot-to-code` is a vendored sub-project with its own tsconfig,
+  // React types and pnpm store; `dist*` are build outputs. Without these the
+  // app's typecheck reports hundreds of failures it can do nothing about,
+  // which makes `tsc --noEmit` useless as a signal for THIS app.
+  "exclude": ["node_modules", "supabase/functions", "dist", "dist-ios", "screenshot-to-code"]
+}

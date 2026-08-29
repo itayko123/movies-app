@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Web only: react-native-web mounts the app into #root. Without an explicit
+ * full-height dark chain here the browser paints its own white page behind the
+ * app (visible as a flash on load, and around the app on short content), and
+ * `flex-1` at the React root has no definite height to resolve against.
+ */
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    background-color: #000000;
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    overscroll-behavior: none;
+  }
+
+  #root {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /*
+   * RTL horizontal-overflow containment.
+   *
+   * Several screens paint a deliberately OVERSIZED decorative layer — the
+   * welcome screen's ambient poster wall is ~690px wide behind a 375px
+   * viewport, so the blur bleeds past the edges instead of ending in a visible
+   * seam. On native that layer is clipped by the view hierarchy. On web it is
+   * not: it makes the DOCUMENT wider than the viewport.
+   *
+   * Under `dir="rtl"` that does not simply add a scrollbar — the horizontal
+   * scroll origin sits on the RIGHT, so the whole document is pushed sideways.
+   * Measured on the production build at 375px: scrollWidth 488 and <html>
+   * offset 112px to the right, which cropped the title and left a black band
+   * down one side. It looks like a broken layout rather than an overflow.
+   *
+   * Expo's own reset in index.html sets `body { overflow: hidden }` but never
+   * constrains WIDTH and never touches <html>, so <html> stays free to scroll.
+   * Pinning both to the viewport and clipping at #root fixes it at the root
+   * rather than shrinking the backdrop, which would lose the bleed the design
+   * depends on. Vertical scrolling is unaffected: every scrollable screen uses
+   * a ScrollView, which is its own scroll container inside #root.
+   */
+  html,
+  body,
+  #root {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  #root {
+    overflow: hidden;
+  }
+}

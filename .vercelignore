@@ -1,0 +1,14 @@
+# Native build output — never needed by the web deploy, and large.
+dist-ios/
+android/
+ios/
+.expo/
+# Backend + tooling: deployed separately via the Supabase CLI.
+supabase/
+scripts/
+screenshot-to-code/
+"new app screenshots"/
+*.jpeg
+*.jpg
+*.png
+!assets/**

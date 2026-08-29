@@ -1,0 +1,80 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "// native-tunnel": "Expo Go over an ngrok tunnel — works when the phone is NOT on the same WiFi as this machine (mobile data, guest network, VPN). Slower to boot and to reload than --lan; prefer 'native' when both devices share a network. Requires the @expo/ngrok devDependency.",
+      "name": "native-tunnel",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "expo",
+        "start",
+        "--tunnel",
+        "--go",
+        "--port",
+        "8090"
+      ],
+      "port": 8090
+    },
+    {
+      "name": "native",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "expo",
+        "start",
+        "--lan",
+        "--go",
+        "--port",
+        "8090"
+      ],
+      "port": 8090
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "expo",
+        "start",
+        "--web",
+        "--port",
+        "8090"
+      ],
+      "port": 8090
+    },
+    {
+      "// web-mock": "UI verification only. Separate port so it never disturbs the native LAN server the phone is attached to, and EXPO_PUBLIC_MOCK_AUTH=true so the tabs are reachable without a real sign-in (shell env beats .env; inert outside __DEV__).",
+      "name": "web-mock",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "set EXPO_PUBLIC_MOCK_AUTH=true && npx expo start --web --port 8091"
+      ],
+      "port": 8091
+    },
+    {
+      "// web-signedout": "Web build WITHOUT EXPO_PUBLIC_MOCK_AUTH, so the auth gate treats the session as signed out. Needed to reach /welcome and /auth, which mock-auth skips past. Own port so it never collides with web-mock (8091) or the native LAN server (8090).",
+      "name": "web-signedout",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "expo",
+        "start",
+        "--web",
+        "--port",
+        "8092"
+      ],
+      "port": 8092
+    },
+    {
+      "// web-dist": "Serves the PRODUCTION export in dist/ exactly as Vercel will, with -s (SPA fallback) mirroring the vercel.json rewrite. Use this to catch runtime crashes that only appear in a minified production bundle.",
+      "name": "web-dist",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "serve",
+        "dist",
+        "-s",
+        "-l",
+        "4173"
+      ],
+      "port": 4173
+    }
+  ]
+}
