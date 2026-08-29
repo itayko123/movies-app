@@ -59,6 +59,12 @@
   html,
   body {
     overflow-x: hidden;
+    /*
+     * iOS Safari specific. Even with the document constrained above, Safari
+     * still allows a horizontal rubber-band drag on an RTL page, which snaps
+     * back but reads as the layout sliding loose. This pins it.
+     */
+    overscroll-behavior-x: none;
   }
 
   #root {

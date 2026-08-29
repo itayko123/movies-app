@@ -17,7 +17,7 @@
     "catalogue:populate": "node scripts/populate-catalogue.mjs",
     "catalogue:embed": "node scripts/backfill-embeddings.mjs",
     "catalogue:coverage": "node scripts/embedding-coverage.mjs",
-    "build:web": "expo export --platform web",
+    "build:web": "expo export --platform web && node scripts/patch-web-html.mjs",
     "serve:web": "npx serve dist -s -l 4173"
   },
   "dependencies": {
