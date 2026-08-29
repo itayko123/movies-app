@@ -3,11 +3,25 @@ dist-ios/
 android/
 ios/
 .expo/
-# Backend + tooling: deployed separately via the Supabase CLI.
+
+# Backend: deployed separately via the Supabase CLI.
 supabase/
-scripts/
+
+# Tooling. NOTE the `scripts/*` form rather than `scripts/`: gitignore
+# semantics do not allow re-including a file inside an EXCLUDED DIRECTORY, so
+# `scripts/` + `!scripts/patch-web-html.mjs` silently fails and the build dies
+# with "Cannot find module". Excluding the contents instead keeps the
+# directory itself walkable, which makes the negation below actually work.
+scripts/*
+!scripts/patch-web-html.mjs
+
 screenshot-to-code/
-"new app screenshots"/
+
+# Reference screenshots. No quotes — gitignore patterns are literal, so
+# `"new app screenshots"/` looks for a directory whose name really does start
+# with a double quote, and matches nothing.
+new app screenshots/
+
 *.jpeg
 *.jpg
 *.png
